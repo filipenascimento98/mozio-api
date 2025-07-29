@@ -27,6 +27,9 @@ docker compose up -d --build
 ```
 Thus, the application will run in a Docker container.
 
+# Deploy
+The application is running on Docker containers and was deployed on AWS using EC2 service.
+
 # Endpoints
 For more details, you can consult the documentation for this API on the endpoint:
 ```bash
