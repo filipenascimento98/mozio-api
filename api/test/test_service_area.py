@@ -52,6 +52,21 @@ class TestServiceAreaEndpoints(TestCase):
             reverse('service-area-detail', args=[response_post.data['id']]), format='json')
         self.assertEqual(response_get.status_code, status.HTTP_200_OK)
         self.assertEqual(response_get.data['id'], response_post.data['id'])
+    
+    def test_list_service_areas(self):
+        """
+            List all service areas
+        """
+        response = self.api_client.get(reverse('service-area-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])
+
+        self.api_client.post(reverse('service-area-list'), self.service_area_data, format='json')
+        response = self.api_client.get(reverse('service-area-list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], self.service_area_data['name'])
+
 
     def test_update_servicea_area(self):
         """
@@ -173,3 +188,17 @@ class TestServiceAreaEndpoints(TestCase):
             format='json'
         )
         self.assertEqual(response_get.status_code, status.HTTP_400_BAD_REQUEST)
+    
+    def test_get_polygons_with_point_outside(self):
+        """
+            Try to get polygons with a point outside any service area
+        """
+        self.api_client.post(reverse('service-area-list'), self.service_area_data, format='json')
+
+        response = self.api_client.get(
+            reverse('service-area-avaiable'),
+            {'lat': -20.000000, 'lng': -40.000000},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, [])

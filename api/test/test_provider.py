@@ -111,3 +111,61 @@ class TestProviderEndpoints(TestCase):
             reverse('provider-list'), self.provider_data, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    
+    def test_list_providers(self):
+        """
+            List all providers
+        """
+        response_empty = self.api_client.get(reverse('provider-list'), format='json')
+        self.assertEqual(response_empty.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_empty.data, [])
+
+        self.api_client.post(reverse('provider-list'), self.provider_data, format='json')
+        response = self.api_client.get(reverse('provider-list'), format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['email'], self.provider_data['email'])
+
+    def test_update_provider_invalid_data(self):
+        """
+            Update a provider with invalid data (e.g., missing required fields)
+        """
+        response_post = self.api_client.post(reverse('provider-list'), self.provider_data, format='json')
+        self.assertEqual(response_post.status_code, status.HTTP_201_CREATED)
+
+        invalid_data = {
+            "email": "",
+            "name": "",
+            "phone_number": "799999999",
+            "language": "EN",
+            "currency": "USD"
+        }
+
+        response_put = self.api_client.put(
+            reverse('provider-detail', args=[response_post.data['id']]),
+            invalid_data,
+            format='json'
+        )
+        self.assertEqual(response_put.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_retrieve_nonexistent_provider(self):
+        """
+            Try to retrieve a provider that does not exist
+        """
+        response = self.api_client.get(reverse('provider-detail', args=[14587]), format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_delete_nonexistent_provider(self):
+        """
+            Try to delete a provider that does not exist
+        """
+        response = self.api_client.delete(reverse('provider-detail', args=[14587]), format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_invalid_token(self):
+        """
+            Try to access with an invalid token
+        """
+        self.api_client.credentials(HTTP_AUTHORIZATION='Token ' + 'invalidtoken123')
+        response = self.api_client.get(reverse('provider-list'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
