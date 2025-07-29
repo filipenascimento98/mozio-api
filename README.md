@@ -15,26 +15,28 @@ This API create, update, delete and retrieves geo information about providers an
 
 To access the API, first, clone this repository.
 ```bash
-git clone https://github.com/filipenascimento98/mozio-challenge.git
+git clone https://github.com/filipenascimento98/mozio-api.git
 ```
 
 # How to use
+Must be created an __.env__ file based on example __.env-example__. Once the enviroments variables set up you can continue with the running. 
+
 This project depends on [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/). With the dependencies resolved, navigate to the project directory that contains the __docker_compose.yml__ file and run the following command that will build and deploy the application:
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 Thus, the application will run in a Docker container.
 
 # Endpoints
 For more details, you can consult the documentation for this API on the endpoint:
 ```bash
-https://mozio-api.52.7.144.97.nip.io/api/doc/
+https://mozio-api.3.219.248.175.sslip.io/api/doc/
 ```
 
 # How to access
 The API can be accessed via the base url:
 ```bash
-https://mozio-api.52.7.144.97.nip.io/api/
+https://mozio-api.3.219.248.175.sslip.io/api/
 ```
 Their endpoints can be accessed through the documentation mentioned above.
 ## Collection to use on Postman
