@@ -62,3 +62,10 @@ If you running in container execute the test inside the container. To enter in c
 docker exec -it <container-name> /bin/bash
 python manage.py test
 ```
+
+# Coverage
+With this library we can see how much we cover the code with tests. Using the commando below we can see a report about the coverage percentage.
+```bash
+coverage run manage.py test
+coverage report -m
+```
